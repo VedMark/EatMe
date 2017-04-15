@@ -5,11 +5,9 @@
 #include <deque>
 #include <string>
 
-class Menu;
-class Orders;
+#include "menu.h"
 
-typedef Orders OrderLine;
-typedef Orders History;
+
 
 class Order
 {	

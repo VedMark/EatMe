@@ -75,7 +75,6 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="order.h" />
     <ClInclude Include="user.h" />
-    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

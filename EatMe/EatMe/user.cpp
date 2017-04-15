@@ -1,7 +1,6 @@
 #include "menu.h"
 #include "order.h"
 #include "user.h"
-#include "utils.h"
 
 unsigned int User::ID = 0;
 
@@ -17,29 +16,27 @@ User::User(const User& user)
 
 void User::addInBasket(const dish& dish_)
 {
-	pBuyings->push_back(dish_);
+	pBuyings->addDish(dish_);
 }
 
 void User::addDishInMenu(Menu* menu)
 {}
 
-void User::deleteDish(Menu* menu)
+void User::deleteDishes(Menu* menu)
 {}
 
-void User::parseOrders(Orders *currentOrders, Orders *archive)
-{}
 
 void User::replenishWallet()
 {}
+
+void User::parseOrders(Orders *currentOrders, Orders *archive) {}
+
 
 Admin::Admin(std::string FIO, std::string password) : 
 	User(FIO, password) {}
 
 Admin::Admin(const Admin& user) :
 	User(user) {}
-
-void Admin::A()
-{}
 
 void Admin::addDishInMenu(Menu* menu)
 {
@@ -55,17 +52,17 @@ void Admin::addDishInMenu(Menu* menu)
 
 }
 
-void Admin::deleteDish(Menu* menu)
+void Admin::deleteDishes(Menu* menu)
 {
 	int choise = 0;
 	std::cout << this;
 	std::cout << "Choose dish number to delete ";
-	utilits::choise_input(choise);
+	std::cin >> choise;
 
 	if (menu->deleteDish(choise - 1))
 
 	std::cout << "1 - repeat\n 2 - go back\n";
-	utilits::choise_input(choise);
+	std::cin >> choise;
 	while (true)
 	{
 		try
@@ -73,7 +70,7 @@ void Admin::deleteDish(Menu* menu)
 			switch (choise)
 			{
 			case 1:
-				deleteDish(menu);
+				deleteDishes(menu);
 				return;
 			case 2:
 				return;
@@ -91,17 +88,18 @@ void Admin::deleteDish(Menu* menu)
 	}
 }
 
-void Admin::parseOrders(Orders *currentOrders, Orders *archive)
+
+void Admin::parseOrders(Basket* currentOrders, History* archive)
 {
 	char choise = 0;
-	std::cout << *currentOrders;
+	std::cout << currentOrders;
 	std::cout << "Choose delivered order: ";
-	utilits::choise_input(choise);
+	std::cin >> choise;
 
-	currentOrders->deleteOrder(choise - 1);
+	currentOrders->deleteDish(choise - 1);
 
 	std::cout << "1 - repeat\n 2 - go back\n";
-	utilits::choise_input(choise);
+	std::cin >> choise;
 	while (true)
 	{
 		try
@@ -139,15 +137,10 @@ Customer::Customer(const Customer& user) :
 	aMoney = user.aMoney;
 }
 
-void Customer::addInBasket(const dish& dish_)
-{
-	pBuyings->push_back(dish_);
-}
-
 void Customer::replenishWallet()
 {
 	unsigned int money;
 	std::cout << "Input money count you want to add: ";
-	utilits::choise_input(money);
+	std::cin >> money;
 	aMoney += money;
 }

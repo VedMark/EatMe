@@ -1,16 +1,17 @@
-#ifndef USER_H
-#define USER_H
+#pragma once
 
 #include <string>
 #include <iostream>
 #include <iterator>
 #include <vector>
 
-struct dish;
+
+class dish;
 class Menu;
+
 class Orders;
-typedef std::vector<dish> DishList;
-typedef std::vector<Menu> Basket;
+typedef Menu Basket;
+typedef Orders History;
 
 const enum UserType{ ADMIN, CUSTOMER };
 
@@ -21,7 +22,7 @@ public:
 	User(const User&);
 
 	virtual void addDishInMenu(Menu* menu);
-	virtual void deleteDish(Menu* menu);
+	virtual void deleteDishes(Menu* menu);
 	virtual void parseOrders(Orders *currentOrders, Orders *archive);
 
 	virtual void addInBasket(const dish&);
@@ -43,7 +44,6 @@ protected:
 };
 
 
-
 class Admin : public User
 {
 public:
@@ -51,11 +51,10 @@ public:
 	Admin(const Admin&);
 
 	void addDishInMenu(Menu* menu);
-	void deleteDish(Menu* menu);
+	void deleteDishes(Menu* menu);
 	inline void A();
-	void parseOrders(Orders *currentOrders, Orders *archive);
+	void parseOrders(Basket* currentOrders, History* archive);
 };
-
 
 
 class Customer : public User
@@ -68,12 +67,9 @@ public:
 
 	explicit Customer(const Customer&);
 	
-	void addInBasket(const dish&);
 	void replenishWallet();
 
 protected:
 	std::string aAddress;
 	unsigned int aMoney;
 };
-
-#endif

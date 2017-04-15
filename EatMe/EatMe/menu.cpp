@@ -1,5 +1,4 @@
 #include "menu.h"
-#include "utils.h"
 
 Menu::Menu(std::string name, unsigned int cost)
 {
@@ -29,7 +28,7 @@ const dish* Menu::chooseDish()
 	{
 		try
 		{
-			utilits::choise_input(choise);
+			std::cin >> choise;
 
 			switch (choise)
 			{
@@ -49,7 +48,7 @@ const dish* Menu::chooseDish()
 	}
 
 	std::cout << "Enter the number of dish: ";
-	utilits::choise_input(choise);
+	std::cin >> choise;
 	return &aDishList[choise - 1];
 }
 
@@ -58,7 +57,7 @@ void Menu::addDish(const dish& dish_)
 	aDishList.push_back(dish_);
 }
 
-bool Menu::deleteDish(int pos)
+bool Menu::deleteDish(unsigned int pos)
 {
 	if (pos < aDishList.size())
 		aDishList.erase(aDishList.begin() + pos);
@@ -70,8 +69,8 @@ bool Menu::deleteDish(int pos)
 
 std::ostream& operator<<(std::ostream& os, Menu& menu)
 {
-	for (int i = 0; i < menu.aDishList.size(); ++i)
-		os << i + 1 << " - " << menu.aDishList[i].name << " "
-		<< menu.aDishList[i].cost;
+	for (unsigned int i = 0; i < menu.aDishList.size(); ++i)
+		os << i + 1 << " - " << menu.aDishList[i].getName() << " "
+		<< menu.aDishList[i].getCost();
 	return os;
 }

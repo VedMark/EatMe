@@ -6,12 +6,16 @@
 #include <vector>
 #include <queue>
 
+class dish;
+class Menu;
+typedef std::vector< dish > DishList;
 
-struct dish
+class dish
 {
 	std::string name;
 	unsigned int cost;
 
+public:
 	dish(std::string name_ = "", unsigned int cost_ = 0)
 		: name(name_), cost(cost_) {}
 
@@ -21,13 +25,13 @@ struct dish
 		cost = d.cost;
 		return dish(name, cost);
 	}
+
+	std::string getName() const { return name; }
+	void setName(std::string name_) { name = name_; }
+
+	unsigned int getCost() const { return cost; }
+	void setCost(unsigned int cost_) { cost = cost_; }
 };
-
-
-class Menu;
-typedef std::vector< dish > DishList;
-typedef std::vector< Menu > Basket;
-
 
 class Menu
 {
@@ -41,8 +45,8 @@ public:
 
 	const dish* chooseDish();
 
-	inline void addDish(const dish&);
-	inline bool deleteDish(int pos);
+	void addDish(const dish&);
+	bool deleteDish(unsigned int pos);
 
 	friend std::ostream& operator<<(std::ostream& os, Menu& menu);
 
