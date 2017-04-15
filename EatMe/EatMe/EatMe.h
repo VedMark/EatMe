@@ -1,16 +1,12 @@
-#ifndef EAT_ME
-#define EAT_ME
+#ifndef EATME_H
+#define EATME_H
 
-#include <fstream>
 #include <string>
-#include <vector>
 
 #include "user.h"
 #include "menu.h"
 #include "order.h"
-#include "ciphers/RC5Simple.h"
-
-typedef fstream *Storage;
+#include "utils.h"
 
 class EatMe
 {
@@ -18,17 +14,20 @@ public:
 	explicit EatMe();
 	~EatMe();
 
-	inline void run();
+	void signIn();
+	void signUp();
+
+	int run();
+	void show_menu(UserType);
 
 private:
-	const string KEY_FILE_NAME = "storage/key.txt";
-	const string ORDER_FILE_NAME = "storage/orders.txt";
-	const string PASSWORDS_FILE_NAME = "storage/passwords.txt";
+	const std::string PASSWORD_FILE_NAME = "storage/passwords.txt";
 
-	RC5Simple *pRC5;
 	Menu *pMenu;
-	Basket *customerBasker;
 	User *pCurrentUser;
+
+	OrderLine aOrderLine;
+	History aOrderArchive;
 };
 
-#endif // EAT_ME
+#endif

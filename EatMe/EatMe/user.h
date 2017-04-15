@@ -1,68 +1,79 @@
-#ifndef USERS_H
-#define USERS_H
+#ifndef USER_H
+#define USER_H
 
 #include <string>
 #include <iostream>
+#include <iterator>
+#include <vector>
 
+struct dish;
+class Menu;
+class Orders;
+typedef std::vector<dish> DishList;
+typedef std::vector<Menu> Basket;
+
+const enum UserType{ ADMIN, CUSTOMER };
 
 class User
 {
-	friend class Orders;
 public:
-	inline virtual void seeMenu();
+	explicit User(std::string name = "", std::string aPassword = "");
+	User(const User&);
 
-	inline void logIn();
-	inline void seeDishes();
-	inline void addInBasket(unsigned int choise);
-	
-};
+	virtual void addDishInMenu(Menu* menu);
+	virtual void deleteDish(Menu* menu);
+	virtual void parseOrders(Orders *currentOrders, Orders *archive);
 
+	virtual void addInBasket(const dish&);
+	virtual void replenishWallet();
 
+	inline unsigned int getID() const { return aID; }
+	inline void setId(unsigned int id) { aID = id; }
 
-class LogedInUser : public User
-{
-public:
-	explicit LogedInUser(std::string aName = "", std::string password = "");
-	explicit LogedInUser(const LogedInUser&);
+	inline std::string getName() const { return aName; }
+	inline void setName(std::string name) { aName = name; }
 
-private:
+protected:
+	Basket *pBuyings;
 	static unsigned int ID;
 
-	unsigned int aId;
+	unsigned int aID;
 	std::string aName;
 	std::string aPassword;
 };
 
 
 
-class Admin : public LogedInUser
+class Admin : public User
 {
 public:
 	explicit Admin(std::string aName = "", std::string password = "");
-	explicit Admin(const Admin&);
+	Admin(const Admin&);
 
-	void seeMenu();
-
-	inline void addDishInMenu();
-	inline void deleteDish();
-	inline void seeOrders();
-
-private:
-
+	void addDishInMenu(Menu* menu);
+	void deleteDish(Menu* menu);
+	inline void A();
+	void parseOrders(Orders *currentOrders, Orders *archive);
 };
 
 
 
-class Customer : public LogedInUser
+class Customer : public User
 {
 public:
-	explicit Customer(std::string FIO = "", std::string password = "");
+	explicit Customer(std::string FIO = "",
+					std::string password = "",
+					std::string address = "",
+					unsigned int money = 0);
+
 	explicit Customer(const Customer&);
+	
+	void addInBasket(const dish&);
+	void replenishWallet();
 
-	inline void seeMenu();
-
-private:
-
+protected:
+	std::string aAddress;
+	unsigned int aMoney;
 };
 
-#endif //USERS_H
+#endif

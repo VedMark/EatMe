@@ -64,7 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ciphers\RC5Simple.cpp" />
     <ClCompile Include="EatMe.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -72,11 +71,11 @@
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ciphers\RC5Simple.h" />
     <ClInclude Include="EatMe.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="order.h" />
     <ClInclude Include="user.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

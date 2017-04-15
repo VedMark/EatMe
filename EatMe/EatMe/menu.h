@@ -1,8 +1,11 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
+
 
 struct dish
 {
@@ -21,10 +24,10 @@ struct dish
 };
 
 
-typedef std::vector<dish> DishList;
-
 class Menu;
-typedef Menu Basket;
+typedef std::vector< dish > DishList;
+typedef std::vector< Menu > Basket;
+
 
 class Menu
 {
@@ -36,20 +39,15 @@ public:
 	Menu(DishList);
 	Menu(const Menu&);
 
-	inline void addDish(std::string name, unsigned int cost);
-	inline void addDish(const dish&);
-	inline void deleteDish();
+	const dish* chooseDish();
 
-	friend ostream& operator<<(ostream& os,  Menu& menu)
-	{
-		for (int i = 0; i < menu.aDishList.size(); ++i)
-			os << i + 1 << " - " << menu.aDishList[i].name << " "
-			<< menu.aDishList[i].cost;
-		return os;
-	}
+	inline void addDish(const dish&);
+	inline bool deleteDish(int pos);
+
+	friend std::ostream& operator<<(std::ostream& os, Menu& menu);
 
 private:
 	DishList aDishList;
 };
 
-#endif //MENU_H
+#endif
