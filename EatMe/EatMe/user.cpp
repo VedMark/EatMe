@@ -1,10 +1,10 @@
-#include "menu.h"
-#include "order.h"
 #include "user.h"
 
 unsigned int User::ID = 0;
 
-User::User(std::string name, std::string password) : pBuyings(NULL), aID(ID++), aName(name), aPassword(password) {}
+User::User(std::string name, std::string password) : aID(ID++), aName(name), aPassword(password) {
+	pBuyings = new Basket();
+}
 
 User::User(const User& user)
 {
@@ -14,22 +14,23 @@ User::User(const User& user)
 	aPassword = user.aPassword;
 }
 
-void User::addInBasket(const dish& dish_)
+void User::addDishInMenu(Menu* menu) {}
+
+void User::deleteDishes(Menu* menu) {}
+
+void User::parseOrders(Orders *currentOrders, Orders *archive) {}
+
+void User::addInBasket(const Dish& dish_)
 {
 	pBuyings->addDish(dish_);
 }
 
-void User::addDishInMenu(Menu* menu)
-{}
+void User::replenishWallet() {}
 
-void User::deleteDishes(Menu* menu)
-{}
+int User::getMoney() const { return 0; }
 
+void User::setMoney(float money_) {}
 
-void User::replenishWallet()
-{}
-
-void User::parseOrders(Orders *currentOrders, Orders *archive) {}
 
 
 Admin::Admin(std::string FIO, std::string password) : 
@@ -40,70 +41,87 @@ Admin::Admin(const Admin& user) :
 
 void Admin::addDishInMenu(Menu* menu)
 {
-	std::string name = "";
-	unsigned int cost = 0;
+	try{
+		std::string name = "";
+		float cost = 0;
 
-	std::cout << "Enter dish name : ";
-	std::cin >> name;
-	std::cout << "Enter your password : ";
-	std::cin >> cost;
+		std::cout << "\nEnter Dish name: ";
+		fflush(stdin);
+		std::getline(std::cin, name);
+		std::cout << "Enter the cost: ";
+		if (!(std::cin >> cost))
+			throw InputError();
 
-	dish *dish_ = new dish(name, cost);
-
+		Dish *dish_ = new Dish(name, cost);
+		menu->addDish(*dish_);
+	}
+	catch (InputError error)
+	{
+		fflush(stdout);
+		std::cin.clear();
+		std::cout << error.message;
+		return;
+	}
 }
 
 void Admin::deleteDishes(Menu* menu)
 {
-	int choise = 0;
-	std::cout << this;
-	std::cout << "Choose dish number to delete ";
-	std::cin >> choise;
+	try{
+		int choise = 0;
+		std::cout << *menu;
+		std::cout << "\nChoose Dish to delete: ";
+		if (!(std::cin >> choise))
+			throw InputError();
 
-	if (menu->deleteDish(choise - 1))
-
-	std::cout << "1 - repeat\n 2 - go back\n";
-	std::cin >> choise;
-	while (true)
+		if (choise >= 0 && choise < menu->getDishCount())
+			menu->deleteDish(choise - 1);
+		else
+			std::cout << "\n\n\tWrong input!\n";
+	}
+	catch (InputError error)
 	{
-		try
-		{
-			switch (choise)
-			{
-			case 1:
-				deleteDishes(menu);
-				return;
-			case 2:
-				return;
-			default:
-				throw("\n\t\tWRONG VALUE!!!\n\nReapet input\n");
-			}
-		}
-		catch (std::string warning)
-		{
-			fflush(stdout);
-			std::cin.clear();
-			std::cout << warning;
-			std::cout << "\n================================> ";
-		}
+		fflush(stdout);
+		std::cin.clear();
+		std::cout << error.message;
+		return;
 	}
 }
 
-
-void Admin::parseOrders(Basket* currentOrders, History* archive)
+void Admin::parseOrders(CurrentOrders currentOrders, History archive)
 {
-	char choise = 0;
-	std::cout << currentOrders;
-	std::cout << "Choose delivered order: ";
-	std::cin >> choise;
-
-	currentOrders->deleteDish(choise - 1);
-
-	std::cout << "1 - repeat\n 2 - go back\n";
-	std::cin >> choise;
-	while (true)
+	try
 	{
-		try
+		int choise = 0;
+		std::cout << *currentOrders;
+
+		std::cout << "1 - choose delivered\n2 - go back\n";
+		if (!(std::cin >> choise))
+			throw InputError();
+		while (true)
 		{
+			switch (choise)
+			{
+			case 1:{
+					   std::cout << "Choose delivered order: ";
+					   std::cin >> choise;
+
+					   if (choise >= 0 && choise < currentOrders->size()){
+						   Order deliveredOrder = currentOrders->deleteOrder(choise - 1);
+						   archive->pushOrder(deliveredOrder);
+					   }
+					   else
+						   throw InputError();
+					   break;
+			}
+			case 2:
+				return;
+			default:
+				throw InputError();
+			}
+
+			std::cout << "1 - repeat\n2 - go back\n";
+			if (!(std::cin >> choise))
+				throw InputError();
 			switch (choise)
 			{
 			case 1:
@@ -112,18 +130,19 @@ void Admin::parseOrders(Basket* currentOrders, History* archive)
 			case 2:
 				return;
 			default:
-				throw("\n\t\tWRONG VALUE!!!\n\nReapet input\n");
+				throw InputError();
 			}
 		}
-		catch (std::string warning)
-		{
-			fflush(stdout);
-			std::cin.clear();
-			std::cout << warning;
-			std::cout << "\n================================> ";
-		}
+	}
+	catch (InputError error)
+	{
+		fflush(stdout);
+		std::cin.clear();
+		std::cout << error.message;
+		return;
 	}
 }
+
 
 
 Customer::Customer(std::string FIO, std::string password, std::string address, unsigned int money) :
@@ -139,8 +158,22 @@ Customer::Customer(const Customer& user) :
 
 void Customer::replenishWallet()
 {
-	unsigned int money;
-	std::cout << "Input money count you want to add: ";
-	std::cin >> money;
-	aMoney += money;
+	try{
+		unsigned int money;
+		std::cout << "\ninput money count you want to add: ";
+		if (!(std::cin >> money))
+			throw InputError();
+		if (money >= 0 && money < INT_MAX)
+			aMoney += money;
+		else
+			throw InputError();
+		std::cout << "\n\tYou have " << aMoney << "$" << std::endl;
+	}
+	catch (InputError error)
+	{
+		fflush(stdout);
+		std::cin.clear();
+		std::cout << error.message;
+		return;
+	}
 }

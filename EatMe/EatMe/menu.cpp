@@ -1,58 +1,35 @@
 #include "menu.h"
+#include "user.h"
 
-Menu::Menu(std::string name, unsigned int cost)
+Dish::Dish(std::string name_, float cost_)
+: name(name_), cost(cost_) {}
+
+Dish Dish::operator=(const Dish& d)
 {
-	aDishList.push_back(dish(name, cost));
+	name = d.name;
+	cost = d.cost;
+	return Dish(name, cost);
 }
 
-Menu::Menu(const dish& dish_)
+Menu::Menu()
+{}
+
+Menu::Menu(std::string name, float cost)
+{
+	aDishList.push_back(Dish(name, cost));
+}
+
+Menu::Menu(const Dish& dish_)
 {
 	aDishList.push_back(dish_);
 }
-
-Menu::Menu(DishList dishList) : aDishList(dishList) {}
 
 Menu::Menu(const Menu& menu)
 {
 	aDishList = menu.aDishList;
 }
 
-const dish* Menu::chooseDish()
-{
-	char choise = 0;
-	std::cout << *this;
-	std::cout << "\n--------------------------------\n";
-	std::cout << "1 - Choose a dish\n2 - go back\n" << std::endl;
-
-	while (true)
-	{
-		try
-		{
-			std::cin >> choise;
-
-			switch (choise)
-			{
-			case 1: break;
-			case 2: return nullptr;
-			default: throw("\n\t\tWRONG VALUE!!!\n\nReapet input\n");
-			}
-			break;
-		}
-		catch (std::string warning)
-		{
-			fflush(stdout);
-			std::cin.clear();
-			std::cout << warning;
-			std::cout << "\n================================> ";
-		}
-	}
-
-	std::cout << "Enter the number of dish: ";
-	std::cin >> choise;
-	return &aDishList[choise - 1];
-}
-
-void Menu::addDish(const dish& dish_)
+void Menu::addDish(const Dish& dish_)
 {
 	aDishList.push_back(dish_);
 }
@@ -66,11 +43,54 @@ bool Menu::deleteDish(unsigned int pos)
 	return true;
 }
 
-
-std::ostream& operator<<(std::ostream& os, Menu& menu)
+float Menu::calcDishCost() const
 {
+	float cost = 0;
+	for (unsigned int i = 0; i < aDishList.size(); ++i)
+		cost += aDishList[i].getCost();
+	return cost;
+}
+
+const Dish* Menu::chooseDish() const
+{
+	char choise = 0;
+	try
+	{
+		std::cout << *this;
+		std::cout << "1 - Choose a Dish\n2 - go back\n" << std::endl;
+
+		while (true)
+		{
+
+			if (!(std::cin >> choise))
+				throw InputError();
+			switch (choise)
+			{
+			case '1': break;
+			case '2': return nullptr;
+			default: throw InputError();
+			}
+			break;
+		}
+		std::cout << "\nEnter the number of Dish: ";
+		std::cin >> choise;
+	}
+	catch (InputError error)
+	{
+		fflush(stdout);
+		std::cin.clear();
+		std::cout << error.message;
+		return nullptr;
+	}
+	return choise >= 0 && choise < aDishList.size() ? &aDishList[choise - 49] : nullptr;
+}
+
+std::ostream& operator<<(std::ostream& os, const Menu& menu)
+{
+	std::cout << "\n------------------MENU------------------\n";
 	for (unsigned int i = 0; i < menu.aDishList.size(); ++i)
 		os << i + 1 << " - " << menu.aDishList[i].getName() << " "
-		<< menu.aDishList[i].getCost();
+		<< menu.aDishList[i].getCost() << "$" << std::endl;
+	std::cout << "----------------------------------------\n\n";
 	return os;
 }

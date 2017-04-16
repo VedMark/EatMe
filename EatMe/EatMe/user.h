@@ -1,19 +1,23 @@
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <iterator>
+#include <iostream>
+#include <string>
 #include <vector>
 
-
-class dish;
-class Menu;
-
-class Orders;
-typedef Menu Basket;
-typedef Orders History;
+#include "menu.h"
+#include "order.h"
 
 const enum UserType{ ADMIN, CUSTOMER };
+
+
+
+class InputError {
+public:
+	std::string message = "\n\t\tWRONG VALUE!\n";
+};
+
+
 
 class User
 {
@@ -23,9 +27,9 @@ public:
 
 	virtual void addDishInMenu(Menu* menu);
 	virtual void deleteDishes(Menu* menu);
-	virtual void parseOrders(Orders *currentOrders, Orders *archive);
+	virtual void parseOrders(Orders* currentOrders, History archive);
 
-	virtual void addInBasket(const dish&);
+	virtual void addInBasket(const Dish&);
 	virtual void replenishWallet();
 
 	inline unsigned int getID() const { return aID; }
@@ -34,14 +38,24 @@ public:
 	inline std::string getName() const { return aName; }
 	inline void setName(std::string name) { aName = name; }
 
+	inline std::string getPassword() const { return aPassword; }
+	inline void setPassword(std::string password) { aPassword = password; }
+
+	inline Basket* getBasket() const { return pBuyings; }
+	inline void setBasket(Basket* buyings) { pBuyings = new Basket(*buyings); }
+
+	virtual int getMoney() const;
+	virtual void setMoney(float money_);
+
 protected:
-	Basket *pBuyings;
 	static unsigned int ID;
 
 	unsigned int aID;
 	std::string aName;
 	std::string aPassword;
+	Basket *pBuyings;
 };
+
 
 
 class Admin : public User
@@ -52,8 +66,7 @@ public:
 
 	void addDishInMenu(Menu* menu);
 	void deleteDishes(Menu* menu);
-	inline void A();
-	void parseOrders(Basket* currentOrders, History* archive);
+	void parseOrders(CurrentOrders currentOrders, History archive);
 };
 
 
@@ -66,7 +79,10 @@ public:
 					unsigned int money = 0);
 
 	explicit Customer(const Customer&);
-	
+
+	int getMoney() const { return aMoney; }
+	void setMoney(int money_) { aMoney = money_; }
+
 	void replenishWallet();
 
 protected:

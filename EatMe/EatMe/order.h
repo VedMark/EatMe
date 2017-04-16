@@ -4,10 +4,12 @@
 #include <iostream>
 #include <deque>
 #include <string>
+#include <iomanip>
 
 #include "menu.h"
 
-
+typedef Orders* CurrentOrders;
+typedef Orders* History;
 
 class Order
 {	
@@ -17,11 +19,15 @@ public:
 	Order::Order(const Order& order);
 
 	inline std::string getCustomerName() const { return aCustomerName; }
-	inline Menu* getBasket() const { return pBasket; }
+
+	inline Basket* getBasket() const { return pBasket; }
+	inline void setBasket(Basket* basket) { pBasket = new Basket(*basket); }
+
+	float getCost() const;
 
 private:
 	std::string aCustomerName;
-	Menu* pBasket;
+	Basket* pBasket;
 };
 
 class Orders
@@ -30,10 +36,13 @@ public:
 	Orders();
 	Orders(const Orders&);
 
-	inline void pushOrder(const Order);
-	inline const Order& getOrder(int pos);
-	inline void deleteOrder(int pos);
+	inline int size() const { return aOrders.size(); }
 
+	Order pushOrder(const Order);
+	const Order& getOrder(int pos);
+
+	Order deleteOrder(int pos);
+	
 	friend std::ostream& operator<<(std::ostream& os, const Orders& orders);
 
 private:
