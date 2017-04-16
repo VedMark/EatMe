@@ -1,5 +1,4 @@
-#ifndef ORDER_H
-#define ORDER_H
+#pragma once
 
 #include <iostream>
 #include <deque>
@@ -48,5 +47,3 @@ public:
 private:
 	std::deque< Order > aOrders;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef EATME_H
-#define EATME_H
+#pragma once
 
 #include <conio.h>
 #include <algorithm>
@@ -43,5 +42,3 @@ private:
 	CurrentOrders pOrderLine;
 	History pOrderArchive;
 };
-
-#endif
