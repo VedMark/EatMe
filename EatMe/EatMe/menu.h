@@ -10,10 +10,6 @@ class Menu;
 typedef Menu Basket;
 typedef std::vector< Dish > DishList;
 
-extern void getLine(std::string var);
-template <class T>
-extern void input(T& var);
-
 class Dish
 {
 	std::string name;

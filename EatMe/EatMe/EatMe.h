@@ -26,7 +26,7 @@ protected:
 	std::string hide_input();
 
 private:
-	const std::string PASSWORD_ALPHABET = {	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_"};
+	const std::string PASSWORD_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_";
 	const int MAX_PASSWORD_LENGTH = 20;
 	const std::string PASSWORD_FILE_NAME = "storage/passwords.txt";
 

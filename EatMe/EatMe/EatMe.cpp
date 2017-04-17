@@ -228,6 +228,7 @@ std::string EatMe::hide_input()
 			}
 			else{
 				std::cout << "\n\n\tWRONG LETTER! REPEAR input" << std::endl;
+				hide_input();
 				break;
 			}
 		}
@@ -269,8 +270,9 @@ bool EatMe::user_exist(std::string file_name, std::string name)
 		std::getline(file, user_info);
 		user_info = decrypt(user_info, 11);
 		_user_array = Split(user_info);
-		if (_user_array[1] == name)
-			return true;
+		if (_user_array.size() >= 3)
+			if (_user_array[1] == name)
+				return true;
 	}
 	return false;
 }

@@ -53,7 +53,7 @@ float Menu::calcDishCost() const
 
 const Dish* Menu::chooseDish() const
 {
-	char choise = 0;
+	int choise = 0;
 	try
 	{
 		std::cout << *this;
@@ -66,14 +66,15 @@ const Dish* Menu::chooseDish() const
 				throw InputError();
 			switch (choise)
 			{
-			case '1': break;
-			case '2': return nullptr;
+			case 1: break;
+			case 2: return nullptr;
 			default: throw InputError();
 			}
 			break;
 		}
 		std::cout << "\nEnter the number of Dish: ";
-		std::cin >> choise;
+		if (!(std::cin >> choise))
+			throw InputError();
 	}
 	catch (InputError error)
 	{
@@ -82,7 +83,7 @@ const Dish* Menu::chooseDish() const
 		std::cout << error.message;
 		return nullptr;
 	}
-	return choise >= 0 && choise < aDishList.size() ? &aDishList[choise - 49] : nullptr;
+	return choise > 0 && choise <= aDishList.size() ? &aDishList[choise - 1] : nullptr;
 }
 
 std::ostream& operator<<(std::ostream& os, const Menu& menu)

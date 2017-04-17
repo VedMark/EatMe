@@ -10,8 +10,6 @@
 
 const enum UserType{ ADMIN, CUSTOMER };
 
-
-
 class InputError {
 public:
 	std::string message = "\n\t\tWRONG VALUE!\n";
