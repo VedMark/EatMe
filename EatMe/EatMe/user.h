@@ -79,11 +79,11 @@ public:
 	explicit Customer(const Customer&);
 
 	int getMoney() const { return aMoney; }
-	void setMoney(int money_) { aMoney = money_; }
+	void setMoney(float money_) { aMoney = money_; }
 
 	void replenishWallet();
 
 protected:
 	std::string aAddress;
-	unsigned int aMoney;
+	float aMoney;
 };

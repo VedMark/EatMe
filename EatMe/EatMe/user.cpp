@@ -94,7 +94,7 @@ void Admin::parseOrders(CurrentOrders currentOrders, History archive)
 		int choise = 0;
 		std::cout << *currentOrders;
 
-		std::cout << "1 - choose delivered\n2 - go back\n";
+		std::cout << "1 - choose delivered\n2 - go back\n\n";
 		if (!(std::cin >> choise))
 			throw InputError();
 		while (true)
@@ -102,10 +102,10 @@ void Admin::parseOrders(CurrentOrders currentOrders, History archive)
 			switch (choise)
 			{
 			case 1:{
-					   std::cout << "Choose delivered order: ";
+					   std::cout << "\nChoose delivered order: ";
 					   std::cin >> choise;
 
-					   if (choise >= 0 && choise < currentOrders->size()){
+					   if (choise > 0 && choise <= currentOrders->size()){
 						   Order deliveredOrder = currentOrders->deleteOrder(choise - 1);
 						   archive->pushOrder(deliveredOrder);
 					   }
@@ -119,7 +119,7 @@ void Admin::parseOrders(CurrentOrders currentOrders, History archive)
 				throw InputError();
 			}
 
-			std::cout << "1 - repeat\n2 - go back\n";
+			std::cout << "\n\n1 - repeat\n2 - go back\n";
 			if (!(std::cin >> choise))
 				throw InputError();
 			switch (choise)
