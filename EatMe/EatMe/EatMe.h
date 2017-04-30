@@ -2,7 +2,6 @@
 
 #include <conio.h>
 #include <algorithm>
-#include <string>
 #include <fstream>
 
 #include "menu.h"
@@ -32,8 +31,6 @@ private:
 
 	std::deque<std::string> find_user(std::string file_name, std::string name, std::string password);
 	bool EatMe::user_exist(std::string file_name, std::string name);
-	std::string encrypt(std::string text, int shift);
-	std::string decrypt(std::string text, int shift);
 	std::deque<std::string> Split(std::string str);
 
 	Menu *pMenu;

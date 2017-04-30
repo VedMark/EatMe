@@ -1,4 +1,5 @@
 #include "EatMe.h"
+#include "Cipher.h"
 
 EatMe::EatMe()
 {
@@ -119,9 +120,8 @@ void EatMe::signUp()
 
 	std::ofstream os;
 	os.open(PASSWORD_FILE_NAME, std::ios::app);
-	std::string ct = encrypt(std::to_string(CUSTOMER) + "*" +
-		name + "*" + password + "*" + address + "*" + std::to_string(money)
-		, 11);
+	std::string ct = VerrnamCipher::encrypt(std::to_string(CUSTOMER) + "*" +
+		name + "*" + password + "*" + address + "*" + std::to_string(money));
 	os << ct << '\n';
 	os.close();
 
@@ -251,7 +251,7 @@ std::deque<std::string> EatMe::find_user(std::string file_name, std::string name
 	while (file)
 	{
 		std::getline(file, user_info);
-		user_info = decrypt(user_info, 11);
+		user_info = VerrnamCipher::decrypt(user_info);
 		_user_array = Split(user_info);
 		if (_user_array.size() >= 3)
 		if (_user_array[1] == name && _user_array[2] == password)
@@ -268,35 +268,13 @@ bool EatMe::user_exist(std::string file_name, std::string name)
 	while (file)
 	{
 		std::getline(file, user_info);
-		user_info = decrypt(user_info, 11);
+		user_info = VerrnamCipher::decrypt(user_info);
 		_user_array = Split(user_info);
 		if (_user_array.size() >= 3)
 			if (_user_array[1] == name)
 				return true;
 	}
 	return false;
-}
-
-std::string EatMe::encrypt(std::string text, int shift)
-{
-	std::string ct = "";
-	char pos = 0;
-	for (unsigned int i = 0; i < text.length(); ++i)
-	{
-		ct += text[i] + shift;
-	}
-	return ct;
-}
-
-std::string EatMe::decrypt(std::string text, int shift)
-{
-	std::string pt = "";
-	int pos = 0;
-	for (unsigned int i = 0; i < text.length(); ++i)
-	{
-		pt += text[i] - shift;
-	}
-	return pt;
 }
 
 std::deque<std::string> EatMe::Split(std::string str)

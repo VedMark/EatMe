@@ -71,6 +71,7 @@
     <ClCompile Include="user.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cipher.h" />
     <ClInclude Include="EatMe.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="order.h" />
